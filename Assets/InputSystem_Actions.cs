@@ -208,6 +208,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Camera"",
+                    ""type"": ""Button"",
+                    ""id"": ""ada0ffbe-fb56-4dad-acd2-483c70327331"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -681,6 +690,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Deccel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c8dc6192-f0e8-42ba-b546-c0dffd33f5dd"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Camera"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1281,6 +1301,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Left = m_Player.FindAction("Left", throwIfNotFound: true);
         m_Player_Accel = m_Player.FindAction("Accel", throwIfNotFound: true);
         m_Player_Deccel = m_Player.FindAction("Deccel", throwIfNotFound: true);
+        m_Player_Camera = m_Player.FindAction("Camera", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1387,6 +1408,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Left;
     private readonly InputAction m_Player_Accel;
     private readonly InputAction m_Player_Deccel;
+    private readonly InputAction m_Player_Camera;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1450,6 +1472,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Deccel".
         /// </summary>
         public InputAction @Deccel => m_Wrapper.m_Player_Deccel;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Camera".
+        /// </summary>
+        public InputAction @Camera => m_Wrapper.m_Player_Camera;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1515,6 +1541,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Deccel.started += instance.OnDeccel;
             @Deccel.performed += instance.OnDeccel;
             @Deccel.canceled += instance.OnDeccel;
+            @Camera.started += instance.OnCamera;
+            @Camera.performed += instance.OnCamera;
+            @Camera.canceled += instance.OnCamera;
         }
 
         /// <summary>
@@ -1565,6 +1594,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Deccel.started -= instance.OnDeccel;
             @Deccel.performed -= instance.OnDeccel;
             @Deccel.canceled -= instance.OnDeccel;
+            @Camera.started -= instance.OnCamera;
+            @Camera.performed -= instance.OnCamera;
+            @Camera.canceled -= instance.OnCamera;
         }
 
         /// <summary>
@@ -1956,6 +1988,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnDeccel(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Camera" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCamera(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
