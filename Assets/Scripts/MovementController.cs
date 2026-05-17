@@ -20,7 +20,9 @@ namespace Movement
         public bool ThirdPerson = true;
         public float turnSpeed = 0f; // change to the turn speed afer testing
         public InputSystem_Actions input;
-        public TMP_Text speedPercent;
+        public TMP_Text speedPer;
+        public TMP_Text turnPer;
+        // then the timer
         public void Awake()
         {
             input = new InputSystem_Actions();
@@ -47,29 +49,41 @@ namespace Movement
             DownArrowOrS.Disable();
             CameraChange.Disable();
         }
+        public AnimationCurve accelerationCurve;
+        public AnimationCurve turnCurve;
+        float maxSpeed = 100f;
+        float acceleration = 10f;
+        public float brakingForce = 25f;  
+        public float speedMph = 0f;
         public void Update()
         {
             // Add the timer and restart buttons
             // Fix the turning and add physics
             // Fix Acceleration and Deceleration and add physics
-            // Fix the UI for laptimes and speedometer
+            // make reverse/slow down work
+            // make you slow down when off track
+            // make you slow down when you turn
+            // add gears?
+            // make you slow down when you aren't accelerating or decelerating
+            // fix high speed shaking
+            // make turn speed decrease when speed increases
+            speedPer.text = $"{speedMph:F0} MPH & {speed:F0}% throttle";
+            turnPer.text = $"Turn Speed: {turnSpeed:F0}";
             transform.position += transform.forward * speed * Time.deltaTime;
-            speedPercent.text = $"Throttle: {Mathf.RoundToInt(speed).ToString()}%";
-            if(UpArrowOrW.IsPressed()) // Or WasPressedThisFrame()
+            turnSpeed = Mathf.Lerp(0f, 50f, Mathf.InverseLerp(0f, 50f, speed));
+            float turnSpeedValue = turnCurve.Evaluate(turnSpeed / 50f) * 50f; 
+            turnSpeed = turnSpeedValue;
+            if(UpArrowOrW.IsPressed()) 
             {
-                speed += 1;
-                if(speed > 100)
-                {
-                    speed = 100;
-                }
+                float speedPercent = speed / maxSpeed; // 0 to 1
+                float currentAccel = accelerationCurve.Evaluate(speedPercent) * acceleration;
+                speed = Mathf.MoveTowards(speed, maxSpeed, currentAccel * Time.deltaTime);
+                //speedMph = Mathf.Lerp(-50f, 275f, Mathf.InverseLerp(-10f, 100f, speed));
+                speedMph = Mathf.Lerp(0f, 275f, Mathf.InverseLerp(0f, 100f, speed));
             }
             if(DownArrowOrS.IsPressed())
             {
-                speed -= 1;
-                if(speed < -10)
-                {
-                    speed = -10;
-                }
+                speed = Mathf.MoveTowards(speed, 0f, brakingForce * Time.deltaTime);
             }
             if(RightArrowOrD.IsPressed())
             {
@@ -78,7 +92,6 @@ namespace Movement
             }
             if(LeftArrowOrA.IsPressed()) 
             {
-                // Add Physics?
                 transform.Rotate(Vector3.left * turnSpeed * Time.deltaTime);
             }
         }
