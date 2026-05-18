@@ -10,7 +10,6 @@ public class CameraController : MonoBehaviour
     public GameObject car;
     public InputAction CameraChange;
     public InputSystem_Actions input;
-
     bool TP = false;
     void Awake()
     {
@@ -28,7 +27,7 @@ public class CameraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         if(CameraChange.WasPressedThisFrame())
         {

@@ -55,18 +55,15 @@ namespace Movement
         float acceleration = 10f;
         public float brakingForce = 25f;  
         public float speedMph = 0f;
+        float maxTurnAngle = 0f; // 65 degrees for left, 300 for the right
         public void Update()
         {
             // Add the timer and restart buttons
-            // Fix the turning and add physics
-            // Fix Acceleration and Deceleration and add physics
             // make reverse/slow down work
             // make you slow down when off track
             // make you slow down when you turn
-            // add gears?
             // make you slow down when you aren't accelerating or decelerating
-            // fix high speed shaking
-            // make turn speed decrease when speed increases
+
             speedPer.text = $"{speedMph:F0} MPH & {speed:F0}% throttle";
             turnPer.text = $"Turn Speed: {turnSpeed:F0}";
             transform.position += transform.forward * speed * Time.deltaTime;
