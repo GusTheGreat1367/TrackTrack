@@ -63,7 +63,7 @@ namespace Movement
             // make you slow down when off track
             // make you slow down when you turn
             // make you slow down when you aren't accelerating or decelerating- slow when coasting
-
+            speedMph = Mathf.Lerp(0f, 275f, Mathf.InverseLerp(0f, 100f, speed));
             speedPer.text = $"{speedMph:F0} MPH & {speed:F0}% throttle";
             turnPer.text = $"Turn Speed: {turnSpeed:F0}";
             transform.position += transform.forward * speed * Time.deltaTime;
@@ -75,8 +75,6 @@ namespace Movement
                 float speedPercent = speed / maxSpeed; // 0 to 1
                 float currentAccel = accelerationCurve.Evaluate(speedPercent) * acceleration;
                 speed = Mathf.MoveTowards(speed, maxSpeed, currentAccel * Time.deltaTime);
-                //speedMph = Mathf.Lerp(-50f, 275f, Mathf.InverseLerp(-10f, 100f, speed));
-                speedMph = Mathf.Lerp(0f, 275f, Mathf.InverseLerp(0f, 100f, speed));
             }
             if(DownArrowOrS.IsPressed())
             {
@@ -93,6 +91,7 @@ namespace Movement
             else
             {
                 // slow down because you are coasting
+                speed = Mathf.MoveTowards(speed, 0f, (acceleration / 4f) * Time.deltaTime); // maybe make it less linear?
             }
         }
     }
