@@ -62,7 +62,7 @@ namespace Movement
             // make reverse/slow down work
             // make you slow down when off track
             // make you slow down when you turn
-            // make you slow down when you aren't accelerating or decelerating
+            // make you slow down when you aren't accelerating or decelerating- slow when coasting
 
             speedPer.text = $"{speedMph:F0} MPH & {speed:F0}% throttle";
             turnPer.text = $"Turn Speed: {turnSpeed:F0}";
@@ -84,12 +84,15 @@ namespace Movement
             }
             if(RightArrowOrD.IsPressed())
             {
-                // Add Physics?
                 transform.Rotate(Vector3.right * turnSpeed * Time.deltaTime); // turn speed is calculated by the speed, the faster you go the slower you turn
             }
             if(LeftArrowOrA.IsPressed()) 
             {
                 transform.Rotate(Vector3.left * turnSpeed * Time.deltaTime);
+            }
+            else
+            {
+                // slow down because you are coasting
             }
         }
     }
