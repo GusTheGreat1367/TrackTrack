@@ -16,13 +16,16 @@ namespace Movement
         public InputAction UpArrowOrW; // Acceleration
         public InputAction DownArrowOrS; // Deceleration
         public InputAction CameraChange;
+        public InputAction resetLap;
         public float speed = 0f;
         public bool ThirdPerson = true;
         public float turnSpeed = 0f; // change to the turn speed afer testing
         public InputSystem_Actions input;
         public TMP_Text speedPer;
         public TMP_Text turnPer;
-        // then the timer
+        Vector3 spawnPoint;
+        Quaternion spawnRot;
+        // lap time
         public void Awake()
         {
             input = new InputSystem_Actions();
@@ -31,6 +34,9 @@ namespace Movement
             UpArrowOrW = input.Player.Accel;
             DownArrowOrS = input.Player.Deccel;
             CameraChange = input.Player.Camera;
+            resetLap = input.Player.Reset;
+            spawnPoint = transform.position;
+            spawnRot = transform.rotation;
         }
 
         public void OnEnable()
@@ -40,6 +46,7 @@ namespace Movement
             UpArrowOrW.Enable();
             DownArrowOrS.Enable();
             CameraChange.Enable();
+            resetLap.Enable();
         }
         public void OnDisable()
         {
@@ -48,6 +55,7 @@ namespace Movement
             UpArrowOrW.Disable();
             DownArrowOrS.Disable();
             CameraChange.Disable();
+            resetLap.Disable();
         }
         public AnimationCurve accelerationCurve;
         public AnimationCurve turnCurve;
@@ -63,6 +71,8 @@ namespace Movement
             // make you slow down when off track
             // make you slow down when you turn
             // make you slow down when you aren't accelerating or decelerating- slow when coasting
+            // for lap time ending, make a raycast that detects when you cross the finish line, then stop timer
+
             speedMph = Mathf.Lerp(0f, 275f, Mathf.InverseLerp(0f, 100f, speed));
             speedPer.text = $"{speedMph:F0} MPH & {speed:F0}% throttle";
             turnPer.text = $"Turn Speed: {turnSpeed:F0}";
@@ -75,6 +85,7 @@ namespace Movement
                 float speedPercent = speed / maxSpeed; // 0 to 1
                 float currentAccel = accelerationCurve.Evaluate(speedPercent) * acceleration;
                 speed = Mathf.MoveTowards(speed, maxSpeed, currentAccel * Time.deltaTime);
+                // timer start
             }
             if(DownArrowOrS.IsPressed())
             {
@@ -82,11 +93,22 @@ namespace Movement
             }
             if(RightArrowOrD.IsPressed())
             {
-                transform.Rotate(Vector3.right * turnSpeed * Time.deltaTime); // turn speed is calculated by the speed, the faster you go the slower you turn
+                if(turnSpeed > 0f)
+                    transform.Rotate(Vector3.right * turnSpeed * Time.deltaTime); 
+                    speed = Mathf.MoveTowards(speed, 0f, (acceleration / 6f) * Time.deltaTime); // make it less linear
             }
             if(LeftArrowOrA.IsPressed()) 
             {
-                transform.Rotate(Vector3.left * turnSpeed * Time.deltaTime);
+                if(turnSpeed > 0f)
+                    transform.Rotate(Vector3.left * turnSpeed * Time.deltaTime);
+                    speed = Mathf.MoveTowards(speed, 0f, (acceleration / 6f) * Time.deltaTime); // make it less linear
+            }
+            if(resetLap.WasPressedThisFrame())
+            {
+                transform.position = spawnPoint;
+                transform.rotation = spawnRot;
+                // timer reset
+                speed = 0f;
             }
             else
             {
