@@ -23,6 +23,7 @@ namespace Movement
         public InputSystem_Actions input;
         public TMP_Text speedPer;
         public TMP_Text turnPer;
+        public TMP_Text timer;
         Vector3 spawnPoint;
         Quaternion spawnRot;
         // lap time
@@ -63,6 +64,8 @@ namespace Movement
         float acceleration = 10f;
         public float brakingForce = 25f;  
         public float speedMph = 0f;
+        public float time;
+        public bool timerRunning = false;
         float maxTurnAngle = 0f; // 65 degrees for left, 300 for the right
         public void Update()
         {
@@ -71,8 +74,12 @@ namespace Movement
             // make you slow down when off track
             // make you slow down when you turn
             // make you slow down when you aren't accelerating or decelerating- slow when coasting
-            // for lap time ending, make a raycast that detects when you cross the finish line, then stop timer
-
+            // for lap time ending, make a raycast that detects when you cross the finish line, then stop timer and display best lap time
+            if(timerRunning)
+            {
+                time += Time.deltaTime; 
+            }
+            timer.text = $"{time:F2}";
             speedMph = Mathf.Lerp(0f, 275f, Mathf.InverseLerp(0f, 100f, speed));
             speedPer.text = $"{speedMph:F0} MPH & {speed:F0}% throttle";
             turnPer.text = $"Turn Speed: {turnSpeed:F0}";
@@ -85,7 +92,10 @@ namespace Movement
                 float speedPercent = speed / maxSpeed; // 0 to 1
                 float currentAccel = accelerationCurve.Evaluate(speedPercent) * acceleration;
                 speed = Mathf.MoveTowards(speed, maxSpeed, currentAccel * Time.deltaTime);
-                // timer start
+                if(speed > 0 && transform.position == spawnPoint)
+                { 
+                    timerRunning = true; 
+                }
             }
             if(DownArrowOrS.IsPressed())
             {
@@ -107,8 +117,9 @@ namespace Movement
             {
                 transform.position = spawnPoint;
                 transform.rotation = spawnRot;
-                // timer reset
+                time = 0f;
                 speed = 0f;
+                timerRunning = false;
             }
             else
             {
