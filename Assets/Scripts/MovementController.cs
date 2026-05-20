@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 
 namespace Movement
 {
-    public class CarMove : MonoBehaviour
+    public class MovementController : MonoBehaviour
     {
         public InputAction LeftArrowOrA; // turn Left
         public InputAction RightArrowOrD; // turn Right
@@ -65,21 +65,24 @@ namespace Movement
         }
         public AnimationCurve accelerationCurve;
         public AnimationCurve turnCurve;
+        public AnimationCurve coastCurve;
         float maxSpeed = 100f;
         float acceleration = 10f;
         public float brakingForce = 25f;  
         public float speedMph = 0f;
         public float time;
         public bool timerRunning = false;
+        bool move = false;
         float maxTurnAngle = 0f; // 65 degrees for left, 300 for the right
         public void Update()
         {
             // make reverse/slow down work
             // make you slow down when off track
-            // make you slow down when you turn
-            // make you slow down when you aren't accelerating or decelerating- slow when coasting
             // for lap time ending, make a raycast that detects when you cross the finish line, then stop timer and display best lap time
-            // esc to return to track men, then another button on that menu to retun to main menu 
+            // esc to return to track menu, then another button on that menu to retun to main menu 
+            // car decels too fast
+            // add main menu pics
+            // fix coasting
 
             if(timerRunning)
             {
@@ -95,29 +98,38 @@ namespace Movement
             turnSpeed = turnSpeedValue;
             if(UpArrowOrW.IsPressed()) 
             {
+                move = true;
                 float speedPercent = speed / maxSpeed; // 0 to 1
                 float currentAccel = accelerationCurve.Evaluate(speedPercent) * acceleration;
                 speed = Mathf.MoveTowards(speed, maxSpeed, currentAccel * Time.deltaTime);
-                if(speed > 0 && transform.position == spawnPoint)
+                if(speed > 0 && transform.position != spawnPoint)
                 { 
                     timerRunning = true; 
                 }
             }
             if(DownArrowOrS.IsPressed())
             {
+                move = true;
                 speed = Mathf.MoveTowards(speed, 0f, brakingForce * Time.deltaTime);
+                // fix reverse, decellerates too fast
             }
             if(RightArrowOrD.IsPressed())
             {
                 if(turnSpeed > 0f)
+                    move = true;
                     transform.Rotate(Vector3.right * turnSpeed * Time.deltaTime); 
-                    speed = Mathf.MoveTowards(speed, 0f, (acceleration / 6f) * Time.deltaTime); // make it less linear
+                    float coastSpeed = Mathf.Lerp(1f, 50f, Mathf.InverseLerp(1f, 50f, speed));
+                    float currentCoast = coastCurve.Evaluate(coastSpeed / 50f) * coastSpeed;
+                    speed = Mathf.MoveTowards(speed, 0f, currentCoast * Time.deltaTime);
             }
             if(LeftArrowOrA.IsPressed()) 
             {
                 if(turnSpeed > 0f)
+                    move = true;
                     transform.Rotate(Vector3.left * turnSpeed * Time.deltaTime);
-                    speed = Mathf.MoveTowards(speed, 0f, (acceleration / 6f) * Time.deltaTime); // make it less linear
+                    float coastSpeed = Mathf.Lerp(1f, 50f, Mathf.InverseLerp(1f, 50f, speed));
+                    float currentCoast = coastCurve.Evaluate(coastSpeed / 50f) * coastSpeed;
+                    speed = Mathf.MoveTowards(speed, 0f, currentCoast * Time.deltaTime);
             }
             if(resetLap.WasPressedThisFrame())
             {
@@ -131,11 +143,15 @@ namespace Movement
             {
                 // UI menu for return to main menu, reset lap, return to track select, ect.
                 timerRunning = false;
+                //SceneManager.LoadScene("PlayMenu");
             }
-            else
+            if(!move)
             {
-                // slow down because you are coasting
-                speed = Mathf.MoveTowards(speed, 0f, (acceleration / 4f) * Time.deltaTime); // maybe make it less linear?
+                //float coastSpeed = Mathf.Lerp(1f, maxSpeed, Mathf.InverseLerp(1f, maxSpeed, speed));
+                //float currentCoast = coastCurve.Evaluate(coastSpeed / maxSpeed) * coastSpeed;
+                float currentCoast = (coastCurve.Evaluate(speed / maxSpeed) * speed) * 0.995f;
+                if(speed > 0f)
+                    speed -= currentCoast;
             }
         }
     }

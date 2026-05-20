@@ -9,7 +9,7 @@ namespace TrackTime
     {
         public float time;
         public int trackNum;
-        CarMove carMove;
+        MovementController carMove;
         public bool timerRunning = false;
         bool lapFinished = false; // ends when you cross the finish line, using RayCasting on this script, lap finished = true
         public void Update()
