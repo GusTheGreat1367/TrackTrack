@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 
 namespace Movement
@@ -17,6 +18,7 @@ namespace Movement
         public InputAction DownArrowOrS; // Deceleration
         public InputAction CameraChange;
         public InputAction resetLap;
+        public InputAction esc;
         public float speed = 0f;
         public bool ThirdPerson = true;
         public float turnSpeed = 0f; // change to the turn speed afer testing
@@ -36,6 +38,7 @@ namespace Movement
             DownArrowOrS = input.Player.Deccel;
             CameraChange = input.Player.Camera;
             resetLap = input.Player.Reset;
+            esc = input.Player.Esc;
             spawnPoint = transform.position;
             spawnRot = transform.rotation;
         }
@@ -48,6 +51,7 @@ namespace Movement
             DownArrowOrS.Enable();
             CameraChange.Enable();
             resetLap.Enable();
+            esc.Enable();
         }
         public void OnDisable()
         {
@@ -57,6 +61,7 @@ namespace Movement
             DownArrowOrS.Disable();
             CameraChange.Disable();
             resetLap.Disable();
+            esc.Disable();
         }
         public AnimationCurve accelerationCurve;
         public AnimationCurve turnCurve;
@@ -69,13 +74,13 @@ namespace Movement
         float maxTurnAngle = 0f; // 65 degrees for left, 300 for the right
         public void Update()
         {
-            // Add the timer and restart buttons
             // make reverse/slow down work
             // make you slow down when off track
             // make you slow down when you turn
             // make you slow down when you aren't accelerating or decelerating- slow when coasting
             // for lap time ending, make a raycast that detects when you cross the finish line, then stop timer and display best lap time
             // esc to return to track men, then another button on that menu to retun to main menu 
+
             if(timerRunning)
             {
                 time += Time.deltaTime; 
@@ -120,6 +125,11 @@ namespace Movement
                 transform.rotation = spawnRot;
                 time = 0f;
                 speed = 0f;
+                timerRunning = false;
+            }
+            if(esc.WasPressedThisFrame())
+            {
+                // UI menu for return to main menu, reset lap, return to track select, ect.
                 timerRunning = false;
             }
             else
