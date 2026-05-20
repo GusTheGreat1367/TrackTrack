@@ -75,6 +75,7 @@ namespace Movement
             // make you slow down when you turn
             // make you slow down when you aren't accelerating or decelerating- slow when coasting
             // for lap time ending, make a raycast that detects when you cross the finish line, then stop timer and display best lap time
+            // esc to return to track men, then another button on that menu to retun to main menu 
             if(timerRunning)
             {
                 time += Time.deltaTime; 
