@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 36605093}
   - component: {fileID: 36605092}
   - component: {fileID: 36605091}
+  - component: {fileID: 36605094}
   m_Layer: 0
   m_Name: Back Right Wheel
   m_TagString: Untagged
@@ -231,6 +232,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 36605089}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &36605094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 36605089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95119e5833bad46fa8df338f3695d3b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WheelSpin
+  wheelsped: 500
+  shouldMove: 0
 --- !u!1 &87325214
 GameObject:
   m_ObjectHideFlags: 0
@@ -774,8 +789,9 @@ GameObject:
   - component: {fileID: 434643035}
   - component: {fileID: 434643034}
   - component: {fileID: 434643033}
+  - component: {fileID: 434643036}
   m_Layer: 0
-  m_Name: Front Left Wheel (1)
+  m_Name: Front Right Wheel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -874,6 +890,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 434643031}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &434643036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 434643031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95119e5833bad46fa8df338f3695d3b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WheelSpin
+  wheelsped: 500
+  shouldMove: 1
 --- !u!1 &488900215
 GameObject:
   m_ObjectHideFlags: 0
@@ -886,6 +916,7 @@ GameObject:
   - component: {fileID: 488900219}
   - component: {fileID: 488900218}
   - component: {fileID: 488900217}
+  - component: {fileID: 488900220}
   m_Layer: 0
   m_Name: Back Left Wheel
   m_TagString: Untagged
@@ -986,6 +1017,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 488900215}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &488900220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 488900215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95119e5833bad46fa8df338f3695d3b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WheelSpin
+  wheelsped: 500
+  shouldMove: 0
 --- !u!1 &693700317
 GameObject:
   m_ObjectHideFlags: 0
@@ -2000,6 +2045,7 @@ GameObject:
   - component: {fileID: 1925011816}
   - component: {fileID: 1925011815}
   - component: {fileID: 1925011814}
+  - component: {fileID: 1925011817}
   m_Layer: 0
   m_Name: Front Left Wheel
   m_TagString: Untagged
@@ -2100,6 +2146,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1925011812}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1925011817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1925011812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95119e5833bad46fa8df338f3695d3b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WheelSpin
+  wheelsped: 500
+  shouldMove: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

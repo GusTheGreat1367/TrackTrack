@@ -72,17 +72,20 @@ namespace Movement
         public float speedMph = 0f;
         public float time;
         public bool timerRunning = false;
+        bool DownArrow = false;
         bool move = false;
         float maxTurnAngle = 0f; // 65 degrees for left, 300 for the right
         public void Update()
         {
-            // make reverse/slow down work
             // make you slow down when off track
             // for lap time ending, make a raycast that detects when you cross the finish line, then stop timer and display best lap time
             // esc to return to track menu, then another button on that menu to retun to main menu 
             // car decels too fast
             // add main menu pics
             // fix coasting
+            // make timer start when you start moving
+            // fix reverse
+            // reverse is at like 5% when you initially hold down arrow, then when you release it it jumps to like 35% 
 
             if(timerRunning)
             {
@@ -96,8 +99,13 @@ namespace Movement
             turnSpeed = Mathf.Lerp(0f, 50f, Mathf.InverseLerp(0f, 50f, speed));
             float turnSpeedValue = turnCurve.Evaluate(turnSpeed / 50f) * 50f; 
             turnSpeed = turnSpeedValue;
+            if(!DownArrow)
+            {
+                speedMph = Mathf.Lerp(0f, 275f, Mathf.InverseLerp(0f, 100f, speed));
+            }
             if(UpArrowOrW.IsPressed()) 
             {
+                DownArrow = false;
                 move = true;
                 float speedPercent = speed / maxSpeed; // 0 to 1
                 float currentAccel = accelerationCurve.Evaluate(speedPercent) * acceleration;
@@ -109,9 +117,15 @@ namespace Movement
             }
             if(DownArrowOrS.IsPressed())
             {
+                DownArrow = true;
                 move = true;
                 speed = Mathf.MoveTowards(speed, 0f, brakingForce * Time.deltaTime);
                 // fix reverse, decellerates too fast
+            }
+            if(speed <= 0 && DownArrow)
+            {
+                speed = Mathf.MoveTowards(speed, -50, brakingForce * Time.deltaTime);
+                speedMph = Mathf.Lerp(-50f, 0f, Mathf.InverseLerp(-50f, 0f, speed));
             }
             if(RightArrowOrD.IsPressed())
             {
@@ -149,6 +163,7 @@ namespace Movement
             {
                 //float coastSpeed = Mathf.Lerp(1f, maxSpeed, Mathf.InverseLerp(1f, maxSpeed, speed));
                 //float currentCoast = coastCurve.Evaluate(coastSpeed / maxSpeed) * coastSpeed;
+                DownArrow = false;
                 float currentCoast = (coastCurve.Evaluate(speed / maxSpeed) * speed) * 0.995f;
                 if(speed > 0f)
                     speed -= currentCoast;
